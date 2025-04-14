@@ -14,11 +14,9 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  kernel/module/main.c        |  33 ++++++++++++++++++++++++---------
  2 files changed, 33 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
-index e395461d59e5..177ebbe232c4 100644
 --- a/include/linux/moduleloader.h
 +++ b/include/linux/moduleloader.h
-@@ -122,4 +122,9 @@ void module_arch_cleanup(struct module *mod);
+@@ -122,4 +122,9 @@ void module_arch_cleanup(struct module *
  /* Any cleanup before freeing mod->module_init */
  void module_arch_freeing_init(struct module *mod);
  
@@ -28,11 +26,9 @@ index e395461d59e5..177ebbe232c4 100644
 +void module_arch_mem_free(struct module_memory *mem);
 +
  #endif
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 49b9bca9de12..cc5ffd297b11 100644
 --- a/kernel/module/main.c
 +++ b/kernel/module/main.c
-@@ -1189,22 +1189,20 @@ void __weak module_arch_freeing_init(struct module *mod)
+@@ -1191,22 +1191,20 @@ void __weak module_arch_freeing_init(str
  {
  }
  
@@ -59,7 +55,7 @@ index 49b9bca9de12..cc5ffd297b11 100644
  
  	/*
  	 * The pointer to these blocks of memory are stored on the module
-@@ -1219,21 +1217,38 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+@@ -1221,21 +1219,38 @@ static int module_memory_alloc(struct mo
  	 */
  	kmemleak_not_leak(ptr);
  
@@ -101,6 +97,3 @@ index 49b9bca9de12..cc5ffd297b11 100644
  }
  
  static void free_mod_mem(struct module *mod, bool unload_codetags)
--- 
-2.48.1
-
