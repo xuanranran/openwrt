@@ -25,8 +25,8 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
  arch/mips/Makefile             |  10 ++
  arch/mips/include/asm/module.h |   5 +
- arch/mips/kernel/module.c      | 281 ++++++++++++++++++++++++++++++++-
- 3 files changed, 292 insertions(+), 4 deletions(-)
+ arch/mips/kernel/module.c      | 282 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 293 insertions(+), 4 deletions(-)
 
 diff --git a/arch/mips/Makefile b/arch/mips/Makefile
 index be8cb44a89fd..0436d0620c14 100644
@@ -71,7 +71,15 @@ diff --git a/arch/mips/kernel/module.c b/arch/mips/kernel/module.c
 index ba0f62d8eff5..0b70d2958e9f 100644
 --- a/arch/mips/kernel/module.c
 +++ b/arch/mips/kernel/module.c
-@@ -30,14 +30,256 @@ struct mips_hi16 {
+@@ -19,6 +19,7 @@
+ #include <linux/kernel.h>
+ #include <linux/spinlock.h>
+ #include <linux/jump_label.h>
++#include <linux/vmalloc.h>
+ #include <asm/jump_label.h>
+ 
+ struct mips_hi16 {
+@@ -30,14 +31,256 @@ struct mips_hi16 {
  static LIST_HEAD(dbe_list);
  static DEFINE_SPINLOCK(dbe_lock);
  
@@ -328,7 +336,7 @@ index ba0f62d8eff5..0b70d2958e9f 100644
  	if (v % 4) {
  		pr_err("module %s: dangerous R_MIPS_26 relocation\n",
  		       me->name);
-@@ -45,13 +287,17 @@ static int apply_r_mips_26(struct module *me, u32 *location, u32 base,
+@@ -45,13 +288,17 @@ static int apply_r_mips_26(struct module *me, u32 *location, u32 base,
  	}
  
  	if ((v & 0xf0000000) != (((unsigned long)location + 4) & 0xf0000000)) {
@@ -350,7 +358,7 @@ index ba0f62d8eff5..0b70d2958e9f 100644
  
  	return 0;
  }
-@@ -431,9 +677,36 @@ int module_finalize(const Elf_Ehdr *hdr,
+@@ -431,9 +678,36 @@ int module_finalize(const Elf_Ehdr *hdr,
  		list_add(&me->arch.dbe_list, &dbe_list);
  		spin_unlock_irq(&dbe_lock);
  	}
